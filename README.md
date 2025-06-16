@@ -2,6 +2,13 @@
 
 A zero-dependency JavaScript library that makes IndexedDB as easy to use as `localStorage`. Provides a Promise-based API with automatic fallback to in-memory storage when IndexedDB is unavailable.
 
+
+## Support the Project
+
+If you’d like to support my work, you can donate via PayPal:
+
+[❤️ Donate via PayPal](https://paypal.me/AlharthyDev)
+
 ## Features
 
 - 🚀 **Simple API** - Just like localStorage but with Promises
