@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiny IDB Helper - Simplified Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        input, button, textarea, select {
+            font-size: 14px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background: #005a8a;
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.secondary:hover {
+            background: #545b62;
+        }
+        .output {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            min-height: 60px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗄️ Tiny IDB Helper - Simplified Demo</h1>
+        
+        <div class="section">
+            <h3>Configuration</h3>
+            <div class="controls">
+                <input type="text" id="dbName" placeholder="Database name" value="demo-db">
+                <button onclick="configureDB()">Configure Database</button>
+            </div>
+            <div id="configStatus"></div>
+        </div>
+
+        <div class="section">
+            <h3>Basic Operations</h3>
+            <div class="controls">
+                <input type="text" id="key" placeholder="Key" value="user">
+                <textarea id="value" placeholder="Value (JSON supported)" rows="2">{"name": "John", "age": 30}</textarea>
+            </div>
+            <div class="controls">
+                <button onclick="setItem()">Set Item</button>
+                <button onclick="getItem()">Get Item</button>
+                <button onclick="removeItem()">Remove Item</button>
+                <button onclick="nullifyItem()">Nullify</button>
+                <button onclick="hasItem()">Has Key</button>
+            </div>
+            <div class="output" id="basicOutput">Ready to perform operations...</div>
+        </div>
+
+        <div class="section">
+            <h3>Numeric Operations</h3>
+            <div class="controls">
+                <input type="text" id="numKey" placeholder="Key" value="counter">
+                <input type="number" id="numAmount" placeholder="Amount" value="1">
+                <button onclick="incrementValue()">Increment</button>
+                <button onclick="decrementValue()">Decrement</button>
+            </div>
+            <div class="output" id="numOutput">Use increment/decrement operations...</div>
+        </div>
+
+        <div class="section">
+            <h3>Boolean Operations</h3>
+            <div class="controls">
+                <input type="text" id="boolKey" placeholder="Key" value="flag">
+                <button onclick="toggleValue()">Toggle</button>
+                <button onclick="getBoolValue()">Get Value</button>
+            </div>
+            <div class="output" id="boolOutput">Use toggle operations...</div>
+        </div>
+
+        <div class="section">
+            <h3>Array Operations</h3>
+            <div class="controls">
+                <input type="text" id="arrayKey" placeholder="Key" value="list">
+                <input type="text" id="arrayValue" placeholder="Value to add" value="item">
+                <button onclick="appendValue()">Append</button>
+                <button onclick="prependValue()">Prepend</button>
+                <button onclick="getArray()">Get Array</button>
+            </div>
+            <div class="output" id="arrayOutput">Use array operations...</div>
+        </div>
+
+        <div class="section">
+            <h3>Data Management</h3>
+            <div class="controls">
+                <button onclick="showAllKeys()">Show Keys</button>
+                <button onclick="showAllValues()">Show Values</button>
+                <button onclick="showAllEntries()">Show Entries</button>
+                <button onclick="showLength()">Show Length</button>
+                <button onclick="loadDemoData()">Load Demo Data</button>
+                <button onclick="clearAll()" class="secondary">Clear All</button>
+            </div>
+            <div class="output" id="dataOutput">Data management operations...</div>
+        </div>
+
+        <div class="section">
+            <h3>Replace All Data</h3>
+            <textarea id="replaceData" placeholder="Enter JSON object to replace all data" rows="4">{
+  "name": "Alice",
+  "age": 25,
+  "settings": {"theme": "dark"},
+  "scores": [100, 95, 88]
+}</textarea>
+            <div class="controls">
+                <button onclick="replaceAllData()">Replace All Data</button>
+            </div>
+            <div class="output" id="replaceOutput">Use replace all to reset storage...</div>
+        </div>
+
+        <div class="section">
+            <h3>System Status</h3>
+            <div class="controls">
+                <button onclick="checkStatus()">Check Status</button>
+            </div>
+            <div class="output" id="statusOutput">Click "Check Status" to see system information...</div>
+        </div>
+    </div>
+
+    <!-- Include the library -->
+    <script src="../src/tiny-idb-helper.js"></script>
+
+    <script>
+        function configureDB() {
+            const dbName = document.getElementById('dbName').value || 'demo-db';
+            
+            try {
+                IDBH.configure({ dbName });
+                log('configStatus', `✅ Configured database: ${dbName}`, 'success');
+            } catch (error) {
+                log('configStatus', `❌ Configuration error: ${error.message}`, 'error');
+            }
+        }
+
+        // Basic operations
+        async function setItem() {
+            const key = document.getElementById('key').value;
+            const valueText = document.getElementById('value').value;
+            
+            if (!key) {
+                log('basicOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                let value;
+                try {
+                    value = JSON.parse(valueText);
+                } catch {
+                    value = valueText; // Use as string if not valid JSON
+                }
+
+                await IDBH.setItem(key, value);
+                log('basicOutput', `✅ Set "${key}" = ${JSON.stringify(value)}`, 'success');
+            } catch (error) {
+                log('basicOutput', `❌ Error setting item: ${error.message}`, 'error');
+            }
+        }
+
+        async function getItem() {
+            const key = document.getElementById('key').value;
+            
+            if (!key) {
+                log('basicOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                const value = await IDBH.getItem(key);
+                if (value === null) {
+                    log('basicOutput', `📭 Key "${key}" not found`, 'warning');
+                } else {
+                    log('basicOutput', `📦 Got "${key}" = ${JSON.stringify(value, null, 2)}`, 'success');
+                }
+            } catch (error) {
+                log('basicOutput', `❌ Error getting item: ${error.message}`, 'error');
+            }
+        }
+
+        async function removeItem() {
+            const key = document.getElementById('key').value;
+            
+            if (!key) {
+                log('basicOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                await IDBH.removeItem(key);
+                log('basicOutput', `🗑️ Removed "${key}"`, 'success');
+            } catch (error) {
+                log('basicOutput', `❌ Error removing item: ${error.message}`, 'error');
+            }
+        }
+
+        async function nullifyItem() {
+            const key = document.getElementById('key').value;
+            
+            if (!key) {
+                log('basicOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                await IDBH.nullify(key);
+                log('basicOutput', `⭕ Nullified "${key}"`, 'success');
+            } catch (error) {
+                log('basicOutput', `❌ Error nullifying item: ${error.message}`, 'error');
+            }
+        }
+
+        async function hasItem() {
+            const key = document.getElementById('key').value;
+            
+            if (!key) {
+                log('basicOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                const exists = await IDBH.has(key);
+                log('basicOutput', `🔍 Key "${key}" ${exists ? 'exists' : 'does not exist'}`, 'success');
+            } catch (error) {
+                log('basicOutput', `❌ Error checking key: ${error.message}`, 'error');
+            }
+        }
+
+        // Numeric operations
+        async function incrementValue() {
+            const key = document.getElementById('numKey').value;
+            const amount = parseInt(document.getElementById('numAmount').value) || 1;
+            
+            if (!key) {
+                log('numOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                const newValue = await IDBH.increment(key, amount);
+                log('numOutput', `➕ Incremented "${key}" by ${amount}, new value: ${newValue}`, 'success');
+            } catch (error) {
+                log('numOutput', `❌ Error incrementing: ${error.message}`, 'error');
+            }
+        }
+
+        async function decrementValue() {
+            const key = document.getElementById('numKey').value;
+            const amount = parseInt(document.getElementById('numAmount').value) || 1;
+            
+            if (!key) {
+                log('numOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                const newValue = await IDBH.decrement(key, amount);
+                log('numOutput', `➖ Decremented "${key}" by ${amount}, new value: ${newValue}`, 'success');
+            } catch (error) {
+                log('numOutput', `❌ Error decrementing: ${error.message}`, 'error');
+            }
+        }
+
+        // Boolean operations
+        async function toggleValue() {
+            const key = document.getElementById('boolKey').value;
+            
+            if (!key) {
+                log('boolOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                const newValue = await IDBH.toggle(key);
+                log('boolOutput', `🔄 Toggled "${key}", new value: ${newValue}`, 'success');
+            } catch (error) {
+                log('boolOutput', `❌ Error toggling: ${error.message}`, 'error');
+            }
+        }
+
+        async function getBoolValue() {
+            const key = document.getElementById('boolKey').value;
+            
+            if (!key) {
+                log('boolOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                const value = await IDBH.getItem(key);
+                log('boolOutput', `📊 "${key}" = ${JSON.stringify(value)}`, 'success');
+            } catch (error) {
+                log('boolOutput', `❌ Error getting value: ${error.message}`, 'error');
+            }
+        }
+
+        // Array operations
+        async function appendValue() {
+            const key = document.getElementById('arrayKey').value;
+            const value = document.getElementById('arrayValue').value;
+            
+            if (!key || !value) {
+                log('arrayOutput', '❌ Please enter both key and value', 'error');
+                return;
+            }
+
+            try {
+                const newArray = await IDBH.append(key, value);
+                log('arrayOutput', `➕ Appended "${value}" to "${key}": ${JSON.stringify(newArray)}`, 'success');
+            } catch (error) {
+                log('arrayOutput', `❌ Error appending: ${error.message}`, 'error');
+            }
+        }
+
+        async function prependValue() {
+            const key = document.getElementById('arrayKey').value;
+            const value = document.getElementById('arrayValue').value;
+            
+            if (!key || !value) {
+                log('arrayOutput', '❌ Please enter both key and value', 'error');
+                return;
+            }
+
+            try {
+                const newArray = await IDBH.prepend(key, value);
+                log('arrayOutput', `⬅️ Prepended "${value}" to "${key}": ${JSON.stringify(newArray)}`, 'success');
+            } catch (error) {
+                log('arrayOutput', `❌ Error prepending: ${error.message}`, 'error');
+            }
+        }
+
+        async function getArray() {
+            const key = document.getElementById('arrayKey').value;
+            
+            if (!key) {
+                log('arrayOutput', '❌ Please enter a key', 'error');
+                return;
+            }
+
+            try {
+                const value = await IDBH.getItem(key);
+                log('arrayOutput', `📋 "${key}" = ${JSON.stringify(value, null, 2)}`, 'success');
+            } catch (error) {
+                log('arrayOutput', `❌ Error getting array: ${error.message}`, 'error');
+            }
+        }
+
+        // Data management
+        async function showAllKeys() {
+            try {
+                const keys = await IDBH.keys();
+                log('dataOutput', `🔑 Keys (${keys.length}): ${JSON.stringify(keys, null, 2)}`, 'success');
+            } catch (error) {
+                log('dataOutput', `❌ Error getting keys: ${error.message}`, 'error');
+            }
+        }
+
+        async function showAllValues() {
+            try {
+                const values = await IDBH.values();
+                log('dataOutput', `💎 Values (${values.length}): ${JSON.stringify(values, null, 2)}`, 'success');
+            } catch (error) {
+                log('dataOutput', `❌ Error getting values: ${error.message}`, 'error');
+            }
+        }
+
+        async function showAllEntries() {
+            try {
+                const entries = await IDBH.entries();
+                log('dataOutput', `📊 All Data:\n${JSON.stringify(entries, null, 2)}`, 'success');
+            } catch (error) {
+                log('dataOutput', `❌ Error getting entries: ${error.message}`, 'error');
+            }
+        }
+
+        async function showLength() {
+            try {
+                const length = await IDBH.length();
+                log('dataOutput', `📏 Storage contains ${length} items`, 'success');
+            } catch (error) {
+                log('dataOutput', `❌ Error getting length: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadDemoData() {
+            try {
+                await IDBH.setItem('user', { name: 'Alice', age: 28, role: 'developer' });
+                await IDBH.setItem('settings', { theme: 'dark', notifications: true });
+                await IDBH.setItem('counter', 42);
+                await IDBH.setItem('flag', true);
+                await IDBH.setItem('todos', ['Learn IndexedDB', 'Build app', 'Deploy']);
+                await IDBH.setItem('scores', [100, 95, 88, 92]);
+                
+                log('dataOutput', '✅ Demo data loaded successfully!', 'success');
+            } catch (error) {
+                log('dataOutput', `❌ Error loading demo data: ${error.message}`, 'error');
+            }
+        }
+
+        async function clearAll() {
+            try {
+                await IDBH.clear();
+                log('dataOutput', '🗑️ All data cleared', 'success');
+            } catch (error) {
+                log('dataOutput', `❌ Error clearing data: ${error.message}`, 'error');
+            }
+        }
+
+        // Replace all data
+        async function replaceAllData() {
+            const dataText = document.getElementById('replaceData').value;
+            
+            if (!dataText.trim()) {
+                log('replaceOutput', '❌ Please enter JSON data', 'error');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(dataText);
+                await IDBH.replaceAll(data);
+                log('replaceOutput', `✅ All data replaced with:\n${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log('replaceOutput', `❌ Error replacing data: ${error.message}`, 'error');
+            }
+        }
+
+        // System status
+        async function checkStatus() {
+            try {
+                const isMemoryFallback = IDBH.isUsingMemoryFallback();
+                const length = await IDBH.length();
+                
+                let status = '🔍 System Status:\n\n';
+                status += `Storage Mode: ${isMemoryFallback ? '💾 Memory Fallback' : '🗄️ IndexedDB'}\n`;
+                status += `IndexedDB Support: ${typeof window.indexedDB !== 'undefined' ? '✅ Available' : '❌ Not Available'}\n`;
+                status += `Items Count: ${length}\n`;
+                status += `Current Database: ${document.getElementById('dbName').value || 'demo-db'}\n`;
+                status += `User Agent: ${navigator.userAgent}\n`;
+                
+                if (isMemoryFallback) {
+                    status += '\n⚠️ Warning: Using memory storage. Data will be lost on page reload.';
+                }
+                
+                log('statusOutput', status, isMemoryFallback ? 'warning' : 'success');
+            } catch (error) {
+                log('statusOutput', `❌ Status check failed: ${error.message}`, 'error');
+            }
+        }
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `output ${type}`;
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            configureDB();
+            checkStatus();
+        });
+    </script>
+</body>
+</html> 
+</body>
+</html> 

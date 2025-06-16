@@ -1,0 +1,33 @@
+{
+  "name": "tiny-idb-helper",
+  "version": "1.0.0",
+  "description": "A zero-dependency JavaScript library that makes IndexedDB as easy to use as localStorage",
+  "main": "src/tiny-idb-helper.js",
+  "module": "src/tiny-idb-helper.js",
+  "types": "src/tiny-idb-helper.d.ts",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "indexeddb",
+    "localstorage",
+    "database",
+    "storage",
+    "promise",
+    "tiny"
+  ],
+  "author": "",
+  "license": "MIT",
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+} 
